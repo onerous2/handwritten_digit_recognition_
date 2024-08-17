@@ -24,7 +24,7 @@ model.fit(x_train, y_train, epochs=3)
 model.save('first-model.keras')
 '''
 
-model = tf.keras.model.load_model('first-model.keras')
+model = tf.keras.models.load_model('first-model.keras')
 
 image_number = 1
 while os.path.isfile(f"digits/digit{image_number}.png"):
