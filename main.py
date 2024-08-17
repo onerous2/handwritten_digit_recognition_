@@ -39,3 +39,7 @@ while os.path.isfile(f"digits/digit{image_number}.png"):
         print("Error!")
     finally:
         image_number += 1
+
+test_loss, test_acc = model.evaluate(x_test, y_test)
+print(f"Test accuracy: {test_acc}")
+print(f"Test loss: {test_loss}")
