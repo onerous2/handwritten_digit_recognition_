@@ -18,10 +18,10 @@ x_test = np.expand_dims(x_test, axis=-1)
 
 # Data augmentation
 datagen = tf.keras.preprocessing.image.ImageDataGenerator(
-    rotation_range=10,
-    zoom_range=0.1,
-    width_shift_range=0.1,
-    height_shift_range=0.1
+    rotation_range=5,
+    zoom_range=0.05,
+    width_shift_range=0.05,
+    height_shift_range=0.05
 )
 datagen.fit(x_train)
 
@@ -52,33 +52,12 @@ model = models.load_model('third-new-model.keras')
 # Function to load and preprocess image using OpenCV
 def PreprocessImage(image_path):
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)  # Read the image as grayscale
-    
-    # Get the target size and the current aspect ratio
-    target_size = (28, 28)
-    height, width = img.shape
-    aspect_ratio = width / height
-    
-    # Compute padding to maintain aspect ratio
-    if aspect_ratio > 1:
-        new_width = target_size[1]
-        new_height = int(new_width / aspect_ratio)
-        resized_img = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
-        pad_vert = (target_size[0] - new_height) // 2
-        padded_img = cv2.copyMakeBorder(resized_img, pad_vert, target_size[0] - new_height - pad_vert, 0, 0, cv2.BORDER_CONSTANT, value=0)
-    else:
-        new_height = target_size[0]
-        new_width = int(new_height * aspect_ratio)
-        resized_img = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_AREA)
-        pad_horz = (target_size[1] - new_width) // 2
-        padded_img = cv2.copyMakeBorder(resized_img, 0, 0, pad_horz, target_size[1] - new_width - pad_horz, cv2.BORDER_CONSTANT, value=0)
-    
-    # Invert colors, normalize and add channel and batch dimensions
-    padded_img = np.invert(padded_img)
-    padded_img = tf.keras.utils.normalize(padded_img, axis=1)
-    padded_img = np.expand_dims(padded_img, axis=-1)
-    padded_img = np.expand_dims(padded_img, axis=0)
-    
-    return padded_img
+    img = cv2.resize(img, (28, 28), interpolation=cv2.INTER_AREA)  # Directly resize without padding
+    img = np.invert(img)
+    img = tf.keras.utils.normalize(img, axis=1)
+    img = np.expand_dims(img, axis=-1)  # Add channel dimension
+    img = np.expand_dims(img, axis=0)  # Add batch dimension
+    return img
 
 def PredictDigit():
     image_number = 1
