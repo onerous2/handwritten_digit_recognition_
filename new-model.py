@@ -38,14 +38,14 @@ test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
 print(f'\nTest accuracy: {test_acc:.4f}')
 print(f'Test loss: {test_loss:.4f}')
 
-model.save('first-new-model.keras')
+model.save('second-new-model.keras')
 
-model = models.load_model('first-new-model.keras')
+model = models.load_model('second-new-model.keras')
 
 # Function to load and preprocess image using OpenCV
 def PreprocessImage(image_path):
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)  # Read the image as grayscale
-    img = cv2.resize(img, (28, 28))  # Resize to 28x28 pixels
+    img = cv2.resize(img, (28, 28), interpolation=cv2.INTER_AREA)  # Resize to 28x28 pixels
     img = np.invert(img)  # Invert colors
     img = tf.keras.utils.normalize(img, axis=1)  # Normalize the pixel values
     img = np.expand_dims(img, axis=-1)  # Add channel dimension
