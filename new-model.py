@@ -28,14 +28,6 @@ model = models.Sequential([
     layers.Dense(10, activation='softmax')
 ])
 
-'''
-model = tf.keras.models.Sequential()
-model.add(tf.keras.layers.Flatten(input_shape = (28,28)))
-model.add(tf.keras.layers.Dense(128, activation="relu"))
-#model.add(tf.keras.layers.Dense(128, activation="relu"))
-model.add(tf.keras.layers.Dense(10, activation="softmax"))
-'''
-
 # No need one-hot encoding when using sparse_categorical_crossentropy
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
@@ -62,9 +54,9 @@ def PreprocessImage(image_path):
 
 def PredictDigit():
     image_number = 1
-    while os.path.isfile(f"digits/digit{image_number}.png"):
+    while os.path.isfile(f"digits2/digit{image_number}.png"):
         try:
-            img = PreprocessImage(f"digits/digit{image_number}.png")
+            img = PreprocessImage(f"digits2/digit{image_number}.png")
             prediction = model.predict(img)
             print(f"This digit is probably a {np.argmax(prediction)}")
             plt.imshow(img[0], cmap=plt.cm.binary)
